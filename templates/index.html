@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mobile Price Predictor - Sri Lanka</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --bg: #f8fafc;
+            --text: #1e293b;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 1rem;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 500px;
+        }
+
+        h1 {
+            margin-top: 0;
+            font-size: 1.5rem;
+            color: var(--primary);
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 1.2rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        select,
+        input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        select:focus,
+        input:focus {
+            border-color: var(--primary);
+        }
+
+        button {
+            width: 100%;
+            padding: 0.75rem;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 1rem;
+            transition: opacity 0.2s;
+        }
+
+        button:hover {
+            opacity: 0.9;
+        }
+
+        #result {
+            margin-top: 2rem;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            text-align: center;
+            display: none;
+        }
+
+        .success {
+            background-color: #dcfce7;
+            color: #166534;
+        }
+
+        .error {
+            background-color: #fee2e2;
+            color: #991b1b;
+        }
+
+        .price {
+            font-size: 1.5rem;
+            font-weight: bold;
+            display: block;
+            margin-top: 0.5rem;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Mobile Price Predictor 📱</h1>
+        <p style="text-align: center; font-size: 0.9rem; color: #64748b; margin-bottom: 2rem;">Predict the price of
+            mobile phones in Sri Lanka.</p>
+
+        <form id="predictForm">
+            <div class="form-group">
+                <label>Brand</label>
+                <select name="brand" required>
+                    <option value="Apple">Apple</option>
+                    <option value="Samsung">Samsung</option>
+                    <option value="Xiaomi">Xiaomi</option>
+                    <option value="Vivo">Vivo</option>
+                    <option value="Oppo">Oppo</option>
+                    <option value="Huawei">Huawei</option>
+                    <option value="Realme">Realme</option>
+                    <option value="unknown">Other</option>
+                </select>
+            </div>
+
+            <div class="form-group" style="display: flex; gap: 1rem;">
+                <div style="flex: 1;">
+                    <label>RAM</label>
+                    <select name="ram" required>
+                        <option value="2">2 GB</option>
+                        <option value="3">3 GB</option>
+                        <option value="4">4 GB</option>
+                        <option value="6">6 GB</option>
+                        <option value="8" selected>8 GB</option>
+                        <option value="12">12 GB</option>
+                        <option value="16">16 GB</option>
+                    </select>
+                </div>
+                <div style="flex: 1;">
+                    <label>Storage</label>
+                    <select name="storage" required>
+                        <option value="32">32 GB</option>
+                        <option value="64">64 GB</option>
+                        <option value="128" selected>128 GB</option>
+                        <option value="256">256 GB</option>
+                        <option value="512">512 GB</option>
+                        <option value="1024">1 TB</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Operating System</label>
+                <select name="os" required>
+                    <option value="Android">Android</option>
+                    <option value="iOS">iOS</option>
+                    <option value="unknown">Other</option>
+                </select>
+            </div>
+
+            <div class="form-group" style="display: flex; gap: 1rem;">
+                <div style="flex: 1;">
+                    <label>Condition</label>
+                    <select name="condition" required>
+                        <option value="Used">Used</option>
+                        <option value="Brand New">Brand New</option>
+                        <option value="unknown">Unknown</option>
+                    </select>
+                </div>
+                <div style="flex: 1;">
+                    <label>Connectivity</label>
+                    <select name="connectivity" required>
+                        <option value="4G">4G</option>
+                        <option value="5G">5G</option>
+                        <option value="unknown">Unknown</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Warranty</label>
+                <select name="warranty" required>
+                    <option value="unknown">Unknown / None</option>
+                    <option value="Yes">Yes (Store/Company)</option>
+                </select>
+            </div>
+
+            <button type="submit">Analyze Market Price</button>
+        </form>
+
+        <div id="result"></div>
+        <div id="details"
+            style="margin-top: 1rem; font-size: 0.85rem; color: #64748b; display: none; background: #f1f5f9; padding: 1rem; border-radius: 0.5rem;">
+            <strong>Prediction Details:</strong>
+            <p id="insightText" style="margin: 0.5rem 0;"></p>
+            <p id="confidenceText" style="margin: 0;"></p>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('predictForm').onsubmit = async (e) => {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            const data = Object.fromEntries(formData);
+
+            const resultDiv = document.getElementById('result');
+            const detailsDiv = document.getElementById('details');
+            resultDiv.style.display = 'block';
+            detailsDiv.style.display = 'none';
+            resultDiv.className = '';
+            resultDiv.innerText = 'Analyzing market data...';
+
+            try {
+                const response = await fetch('/predict', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+
+                const result = await response.json();
+                if (result.success) {
+                    resultDiv.className = 'success';
+                    resultDiv.innerHTML = `Estimated Market Price: <span class="price">LKR ${result.prediction.toLocaleString()}</span>`;
+
+                    document.getElementById('insightText').innerText = "💡 " + result.insight;
+                    document.getElementById('confidenceText').innerHTML = "🛡️ Confidence: <span style='color: #166534; font-weight: bold;'>" + result.confidence + "</span>";
+                    detailsDiv.style.display = 'block';
+                } else {
+                    resultDiv.className = 'error';
+                    resultDiv.innerText = 'Error: ' + result.error;
+                }
+            } catch (err) {
+                resultDiv.className = 'error';
+                resultDiv.innerText = 'Failed to connect to ML server.';
+            }
+        };
+    </script>
+</body>
+
+</html>

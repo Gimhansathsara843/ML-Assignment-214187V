@@ -26,13 +26,29 @@ def load_and_preprocess(filepath):
 
     df['RAM_GB'] = df['RAM'].apply(extract_num)
     df['Storage_GB'] = df['Storage'].apply(extract_num)
+
+    # 3. Features: Extract from Title
+    def extract_condition(title):
+        title = str(title).lower()
+        if 'brand new' in title: return 'Brand New'
+        if 'used' in title: return 'Used'
+        return 'unknown'
+
+    def extract_connectivity(title):
+        title = str(title).lower()
+        if '5g' in title: return '5G'
+        if '4g' in title: return '4G'
+        return 'unknown'
+
+    df['Condition'] = df['Product title'].apply(extract_condition)
+    df['Connectivity'] = df['Product title'].apply(extract_connectivity)
     
-    # 3. Handle Categorical
-    categorical_cols = ['Brand', 'Operating system', 'Warranty']
+    # 4. Handle Categorical
+    categorical_cols = ['Brand', 'Operating system', 'Warranty', 'Condition', 'Connectivity']
     for col in categorical_cols:
         df[col] = df[col].fillna('unknown').astype(str)
         
-    features = ['RAM_GB', 'Storage_GB', 'Brand', 'Operating system', 'Warranty']
+    features = ['RAM_GB', 'Storage_GB', 'Brand', 'Operating system', 'Warranty', 'Condition', 'Connectivity']
     X = df[features]
     y = df['Price']
     
@@ -47,7 +63,7 @@ def train_eval():
     X, y, cat_cols = load_and_preprocess(data_path)
     
     # Encode categorical features for HistGradientBoostingRegressor
-    encoder = OrdinalEncoder()
+    encoder = OrdinalEncoder(handle_unknown='use_encoded_value', unknown_value=-1)
     X_encoded = X.copy()
     X_encoded[cat_cols] = encoder.fit_transform(X[cat_cols])
     
@@ -106,6 +122,12 @@ def train_eval():
     plt.tight_layout()
     plt.savefig('feature_importance.png')
     print("Saved feature_importance.png")
+
+    # Save components for Web App
+    import joblib
+    joblib.dump(model, 'model.joblib')
+    joblib.dump(encoder, 'encoder.joblib')
+    print("Saved model.joblib and encoder.joblib")
 
     # Simple results analysis
     print("\n--- Results Interpretation ---")
